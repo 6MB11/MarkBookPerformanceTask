@@ -6,13 +6,13 @@ namespace CSharpSchool
 {
     class Start : Student //First class
     {
-        static void Main()
+        static void Main() //Entry point for code
         {
             Student s1 = new Student(); //Declaration of objects to represent courses
             Student s2 = new Student();
             Student s3 = new Student();
             Student s4 = new Student();
-            Console.WriteLine("---------------------------------Welcome to Buha Industries' Five Star Markbook------------------------------------"); //Output only once
+            Console.WriteLine("---------------------------------Welcome to Buha Industries' Five Star Markbook------------------------------------"); //Put outside loop to output only once
             Console.WriteLine("This program has been developed to add students (and their marks to all existing assignments) to up to 4 courses, find students, and delete students from courses");
             Console.WriteLine("This program can also add new weighed assignments to fill with marks for all added students");
             Console.WriteLine("This program also can conduct mathematical calculations after having found a student, along with deleting them or replacing their marks");
@@ -51,7 +51,7 @@ namespace CSharpSchool
                 {
                     s4.InputProcessor(s4);
                 }
-                else if ((CourseID == 'E') || (CourseID == 'e'))
+                else if ((CourseID == 'E') || (CourseID == 'e')) //Overall all-corse average finder
                 {
                     Console.WriteLine("Which student to find overall all-course average for?");
                     string name = Convert.ToString(Console.ReadLine());
@@ -319,7 +319,7 @@ namespace CSharpSchool
             bool match = false;
             foreach (string t in names)
             {
-                if (t == name)
+                if (t == name) //If there is a duplicate in the name within the list
                 {
                     Console.WriteLine("Existing student found. You may now change their marks.");
                     match = true;
@@ -341,7 +341,7 @@ namespace CSharpSchool
             bool match = false;
             foreach (string t in assignmentNames)
             {
-                if (t == name)
+                if (t == name) //If there is a duplicate in the assignment name within the list
                 {
                     Console.WriteLine("Existing assignment found. You may now change its marks.");
                     ReplaceAssignment(counter);
@@ -370,7 +370,7 @@ namespace CSharpSchool
                         //do nothing
                     }
                 } while (!quit);
-                for (int i = 0; i < names.Count; i++)
+                for (int i = 0; i < names.Count; i++) //Add assignment marks for however many names there are
                 {
                     Console.WriteLine("Enter {0}'s mark (out of 100) to add to this assignment. Enter an invalid mark to signify no mark.", names[i]);
                     string input = Console.ReadLine();
@@ -418,7 +418,7 @@ namespace CSharpSchool
                 {
                     birthday = Convert.ToDateTime(Console.ReadLine()); //Goes to catch statement if in wrong format
                     quit = true;
-                    if ((DateTime.Now.Year < birthday.Year) || (1900 > birthday.Year))
+                    if ((DateTime.Now.Year < birthday.Year) || (1900 > birthday.Year)) //If birth year makes no sense
                     {
                         Console.WriteLine("The student is not born yet or is too old to be alive today. The date of birth has not been added.");
                         quit = false; //Prevent quitting
@@ -438,13 +438,13 @@ namespace CSharpSchool
                 string input = Console.ReadLine();
                 Start s1 = new Start();
                 short mark = s1.MarkProcessor(input);
-                marks[names.Count - 1].Add(mark);
+                marks[names.Count - 1].Add(mark); //Add the mark to the most recently created name
             }
-            Console.WriteLine("Student added successfully.");
+            Console.WriteLine("Student added successfully."); //Provide confirmation to user
         }
         public int Find(bool runCounter, string name) //Find student for further actions
         {
-            bool quit = false;
+            bool quit = false; //Set quit checker variable
             for (int counter = 0; counter < names.Count; counter++) //Check all names in list for match using counter
             {
                 if (name == names[counter]) //If match
@@ -655,7 +655,7 @@ namespace CSharpSchool
         }
         double ClassMean()
         {
-            double obtainedMarks = 0;
+            double obtainedMarks = 0; //Set variables to have a value of zero
             double totalStudents = 0;
             for (int i = 0; i < names.Count; i++)
             {
@@ -693,7 +693,7 @@ namespace CSharpSchool
         }
         double AssignmentMeans(int assignmentID)
         {
-            List<short> assignmentMarks = new List<short>();
+            List<short> assignmentMarks = new List<short>(); //Create a new list to put the assignment marks for further processing into
             for (int i = 0; i < marks[i].Count; i++)
             {
                 assignmentMarks.Add(marks[i][assignmentID]);
@@ -736,7 +736,7 @@ namespace CSharpSchool
                     Console.WriteLine("It's {0}'s birthday today!", names[Counter]);
                 }
             }
-            return age;
+            return age; //Return the age to wherever the method was called
         }
     }
 }
