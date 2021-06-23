@@ -59,38 +59,50 @@ namespace CSharpSchool
                     double totalMark = 0;
                     int totalCourses = 0;
                     int counter1 = s1.Find(false, name); //Get counter value
-                    double marks1 = s1.Mean(s1.marks[counter1]);
+                    if (counter1 != -1) //If name found
+                    {
+                        double marks1 = s1.Mean(s1.marks[counter1]);
+                        if (marks1 != -1) //Exclude courses with 0 assessments b/c they were not taken
+                        {
+                            totalMark += marks1;
+                            totalCourses++;
+                        }
+                    }
                     int counter2 = s2.Find(false, name); //Get counter value
-                    double marks2 = s2.Mean(s2.marks[counter2]);
+                    if (counter2 != -1) //If name found
+                    {
+                        double marks2 = s2.Mean(s2.marks[counter2]);
+                        if (marks2 != -1) //Exclude courses with 0 assessments b/c they were not taken
+                        {
+                            totalMark += marks2;
+                            totalCourses++;
+                        }
+                    }
                     int counter3 = s3.Find(false, name); //Get counter value
-                    double marks3 = s3.Mean(s3.marks[counter3]);
+                    if (counter3 != -1) //If name found
+                    {
+                        double marks3 = s3.Mean(s3.marks[counter3]);
+                        if (marks3 != -1) //Exclude courses with 0 assessments b/c they were not taken
+                        {
+                            totalMark += marks3;
+                            totalCourses++;
+                        }
+                    }
                     int counter4 = s4.Find(false, name); //Get counter value
-                    double marks4 = s4.Mean(s4.marks[counter4]);
-                    if (marks1 != -1) //Exclude courses with 0 assessments b/c they were not taken
+                    if (counter4 != -1) //If name found
                     {
-                        totalMark += marks1;
-                        totalCourses++;
-                    }
-                    if (marks2 != -1) //Exclude courses with 0 assessments b/c they were not taken
-                    {
-                        totalMark += marks2;
-                        totalCourses++;
-                    }
-                    if (marks3 != -1) //Exclude courses with 0 assessments b/c they were not taken
-                    {
-                        totalMark += marks3;
-                        totalCourses++;
-                    }
-                    if (marks4 != -1) //Exclude courses with 0 assessments b/c they were not taken
-                    {
-                        totalMark += marks4;
-                        totalCourses++;
+                        double marks4 = s4.Mean(s4.marks[counter4]);
+                        if (marks4 != -1) //Exclude courses with 0 assessments b/c they were not taken
+                        {
+                            totalMark += marks4;
+                            totalCourses++;
+                        }
                     }
                     if (totalCourses != 0) //Prevent output when no courses
                     {
                         double average = totalMark / totalCourses;
                         average = Math.Round(average, 2);
-                        Console.WriteLine("Average across all courses is {0}%", average);  //Round marks off to prevent unnecessary decimal places
+                        Console.WriteLine("Mean across all courses is {0}%", average);  //Round marks off to prevent unnecessary decimal places
                         Console.WriteLine("An average of NaN% signifies that there is a course with no marks whatsoever on record.");
                     }
                 }
@@ -122,7 +134,7 @@ namespace CSharpSchool
             bool quit = false;
             do
             {
-                Console.WriteLine("Enter S to add a student, A to add an assignment, F to find a student for further processing, I to import marks and assignments from a file, or anything else to exit to the course selection page."); //Returns t
+                Console.WriteLine("Enter S to add a student, A to add an assignment, F to find a student for further processing, I to import marks and assignments from a file, or Q to exit to the course selection page."); //Returns t
                 char input = 'B';
                 try
                 {
@@ -196,59 +208,53 @@ namespace CSharpSchool
                 myReader = new StreamReader("Marks4.txt");
             }
             string line = "";
-            for (int i = 0; i < 2; i++)
+            line = myReader.ReadLine();
+            List<string> input = new List<string>(line.Split(','));
+            for (int j = 0; j < input.Count; j++) //Read in assignment names
             {
-                line = myReader.ReadLine();
-                List<string> input = new List<string>(line.Split(','));
-                if (i == 0) //First time around, read the names of the assignment into the code
+                if (input[j] != "") //Prevent addition of empty lines after commas
                 {
-                    for (int j = 0; j < input.Count; j++)
+                    input[j].ToUpper(); //Make input uppercase
+                    for (int k = 0; k < assignmentNames.Count; k++)
                     {
-                        if (input[j] != "") //Prevent addition of empty lines after commas
+                        if (assignmentNames[k] == input[j])
                         {
-                            for (int k = 0; k < assignmentNames.Count; k++)
+                            assignmentNames.RemoveAt(k); //Remove duplicates of assignments at the index
+                            assignmentWeights.RemoveAt(k);
+                            preexistingAssignmentCount--; //One less preexisting assignment to deal with
+                            for (int l = 0; l < names.Count; l++)
                             {
-                                if (assignmentNames[k] == input[j])
-                                {
-                                    assignmentNames.RemoveAt(k); //Remove duplicates of assignments at the index
-                                    assignmentWeights.RemoveAt(k);
-                                    preexistingAssignmentCount--; //One less preexisting assignment to deal with
-                                    for (int l = 0; l < names.Count; l++)
-                                    {
-                                        marks[l].RemoveAt(k); //For each student, remove duplicate assignment mark
-                                    }
-                                }
+                                marks[l].RemoveAt(k); //For each student, remove duplicate assignment mark
                             }
-                            assignmentNames.Add(input[j].ToUpper()); //Add assignment name to array
                         }
+                    }
+                    assignmentNames.Add(input[j]); //Add assignment name to array
+                }
+            }
+            line = myReader.ReadLine(); //Read next line
+            input = new List<string>(line.Split(',')); //Replace list with new row of input
+            for (int j = 0; j < input.Count; j++)
+            {
+                try
+                {
+                    if (input[j] != "")
+                    {
+                        assignmentWeights.Add(Convert.ToDouble(input[j]));
                     }
                 }
-                else //Second time around, read the weights of the assignments into the code
+                catch (FormatException)
                 {
-                    for (int j = 0; j < input.Count; j++)
-                    {
-                        try
-                        {
-                            if (input[j] != "")
-                            {
-                                assignmentWeights.Add(Convert.ToDouble(input[j]));
-                            }
-                        }
-                        catch (FormatException)
-                        {
-                            assignmentWeights.Add(0);
-                        }
-                        catch (OverflowException) //If weight too large to fit in short
-                        {
-                            assignmentWeights.Add(0);
-                        }
-                    }
+                    assignmentWeights.Add(0);
+                }
+                catch (OverflowException) //If weight too large to fit in short
+                {
+                    assignmentWeights.Add(0);
                 }
             }
             line = myReader.ReadLine(); //Read next line
             while (line != null)
             {
-                List<string> input = new List<string>(line.Split(','));
+                input = new List<string>(line.Split(','));
                 input[0] = input[0].ToUpper(); //Make uppercase for comparing method later
                 for (int i = 0; i < names.Count; i++)
                 {
@@ -494,16 +500,19 @@ namespace CSharpSchool
                                 {
                                     Console.Write(AssignmentMeans(i) + " ");
                                 }
+                                Console.WriteLine();
                                 Console.WriteLine("Assignment Medians: ");
                                 for (int i = 0; i < assignmentNames.Count; i++) //Output course info in a beautiful visual format
                                 {
                                     Console.Write(AssignmentMedians(i) + " ");
                                 }
-                                Console.WriteLine("Assignment Medians: ");
+                                Console.WriteLine();
+                                Console.WriteLine("Assignment Modes: ");
                                 for (int i = 0; i < assignmentNames.Count; i++) //Output course info in a beautiful visual format
                                 {
                                     Console.Write(AssignmentModes(i) + " ");
                                 }
+                                Console.WriteLine();
                                 for (int i = 0; i < names.Count; i++) //For the amount of students present
                                 {
                                     Console.Write(names[i] + " ");
@@ -624,7 +633,7 @@ namespace CSharpSchool
             {
                 int medianPointLower = sorting[sorting.Count / 2 - 1];
                 int medianPointHigher = sorting[sorting.Count / 2];
-                return (medianPointHigher + medianPointLower) / 2;
+                return (double)(medianPointHigher + medianPointLower) / 2; //Cast to double if median becomes decimal
             }
         }
         int Mode(List<short> marks) //Method to calculate most frequent mark in a set
@@ -680,6 +689,10 @@ namespace CSharpSchool
                 }
             }
             sorting.Sort(); //Using pre-made sorting implementation now that I've discovered it
+            if (sorting.Count == 0)
+            {
+                return -1; //Return invalid mark as no marks to find median of
+            }
             if (sorting.Count % 2 != 0) //https://docs.microsoft.com/en-us/dotnet/api/system.decimal.op_modulus?view=net-5.0 syntax for function to return remainder of division
             {
                 return sorting[(int)(sorting.Count / 2.0 - 0.5)]; //Return middle term casted as an int. Use 2.0 instead of 2 to force decimal division
@@ -694,7 +707,7 @@ namespace CSharpSchool
         double AssignmentMeans(int assignmentID)
         {
             List<short> assignmentMarks = new List<short>(); //Create a new list to put the assignment marks for further processing into
-            for (int i = 0; i < marks[i].Count; i++)
+            for (int i = 0; i < names.Count; i++) //For however many student names there are
             {
                 assignmentMarks.Add(marks[i][assignmentID]);
             }
