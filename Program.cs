@@ -4,24 +4,24 @@ using System.Collections.Generic; //For lists
 using System.IO; //For reading and writing to file
 namespace CSharpSchool
 {
-    class Start : Student //First class
+    class Start : Course //First class
     {
         static void Main() //Entry point for code
         {
-            Student s1 = new Student(); //Declaration of objects to represent courses
-            Student s2 = new Student();
-            Student s3 = new Student();
-            Student s4 = new Student();
+            Course c1 = new Course(); //Declaration of objects to represent courses
+            Course c2 = new Course();
+            Course c3 = new Course();
+            Course c4 = new Course();
             Console.WriteLine("---------------------------------Welcome to Buha Industries' Five Star Markbook------------------------------------"); //Put outside loop to output only once
             Console.WriteLine("This program has been developed to add students (and their marks to all existing assignments) to up to 4 courses, find students, and delete students from courses");
             Console.WriteLine("This program can also add new weighed assignments to fill with marks for all added students");
             Console.WriteLine("This program also can conduct mathematical calculations after having found a student, along with deleting them or replacing their marks");
-            Console.WriteLine("Beside the program.cs tab, you can find a set of text files to add student input to for each course. Please format them as follows");
+            Console.WriteLine("Beside the program.cs tab, you can find a set of text files to add marks and replace students and assignments with the same name for each course. Please format them as follows");
             Console.WriteLine("Assignment Name 1,Assignment Name 2,...");
             Console.WriteLine("Assignment Weight 1,Assignment Weight 2,...");
             Console.WriteLine("Student Name 1,Student Birthday 1,Student Phone 1,Student Email 1,Student 1 Assignment 1 Mark,Student 1 Assignment 2 Mark...");
             Console.WriteLine("Student Name 2,Student Birthday 2,Student Phone 2,Student Email 2,Student 2 Assignment 1 Mark,Student 2 Assignment 2 Mark...");
-            Console.WriteLine("You can also find files in the output directory that will be written to upon quitting the program. Thank you for using this software");
+            Console.WriteLine("You can also find files in the bin directory that will be written to upon quitting the program. Thank you for using this software");
             bool quit = false;
             while (!quit) //While user does not want to quit
             {
@@ -37,89 +37,93 @@ namespace CSharpSchool
                 Console.Clear(); //Clear previous input
                 if (CourseID == '1')
                 {
-                    s1.InputProcessor(s1); //Each course is represented by a separate object to prevent having to create 4 different sets of lists
+                    c1.InputProcessor(c1); //Each course is represented by a separate object to prevent having to create 4 different sets of lists
                 }
                 else if (CourseID == '2')
                 {
-                    s2.InputProcessor(s2);
+                    c2.InputProcessor(c2);
                 }
                 else if (CourseID == '3')
                 {
-                    s3.InputProcessor(s3);
+                    c3.InputProcessor(c3);
                 }
                 else if (CourseID == '4')
                 {
-                    s4.InputProcessor(s4);
+                    c4.InputProcessor(c4);
                 }
                 else if ((CourseID == 'E') || (CourseID == 'e')) //Overall all-corse average finder
                 {
                     Console.WriteLine("Which student to find overall all-course average for?");
                     string name = Convert.ToString(Console.ReadLine());
-                    name = name.ToUpper();
+                    name = name.ToUpper(); //Put in one case to prevent changes in case impacting searching and comparing
                     double totalMark = 0;
                     int totalCourses = 0;
-                    int counter1 = s1.Find(false, name); //Get counter value
+                    int counter1 = c1.Find(false, name); //Get counter value
                     if (counter1 != -1) //If name found
                     {
-                        double marks1 = s1.Mean(s1.marks[counter1]);
+                        double marks1 = c1.Mean(c1.marks[counter1], false);
                         if (marks1 != -1) //Exclude courses with 0 assessments b/c they were not taken
                         {
                             totalMark += marks1;
                             totalCourses++;
                         }
                     }
-                    int counter2 = s2.Find(false, name); //Get counter value
+                    int counter2 = c2.Find(false, name); //Get counter value
                     if (counter2 != -1) //If name found
                     {
-                        double marks2 = s2.Mean(s2.marks[counter2]);
+                        double marks2 = c2.Mean(c2.marks[counter2], false);
                         if (marks2 != -1) //Exclude courses with 0 assessments b/c they were not taken
                         {
                             totalMark += marks2;
                             totalCourses++;
                         }
                     }
-                    int counter3 = s3.Find(false, name); //Get counter value
+                    int counter3 = c3.Find(false, name); //Get counter value
                     if (counter3 != -1) //If name found
                     {
-                        double marks3 = s3.Mean(s3.marks[counter3]);
+                        double marks3 = c3.Mean(c3.marks[counter3], false);
                         if (marks3 != -1) //Exclude courses with 0 assessments b/c they were not taken
                         {
                             totalMark += marks3;
                             totalCourses++;
                         }
                     }
-                    int counter4 = s4.Find(false, name); //Get counter value
+                    int counter4 = c4.Find(false, name); //Get counter value
                     if (counter4 != -1) //If name found
                     {
-                        double marks4 = s4.Mean(s4.marks[counter4]);
+                        double marks4 = c4.Mean(c4.marks[counter4], false);
                         if (marks4 != -1) //Exclude courses with 0 assessments b/c they were not taken
                         {
                             totalMark += marks4;
                             totalCourses++;
                         }
                     }
+                    Console.Clear(); //Clear student name not found messages from Find method
                     if (totalCourses != 0) //Prevent output when no courses
                     {
                         double average = totalMark / totalCourses;
                         average = Math.Round(average, 2);
                         Console.WriteLine("Mean across all courses is {0}%", average);  //Round marks off to prevent unnecessary decimal places
-                        Console.WriteLine("An average of NaN% signifies that there is a course with no marks whatsoever on record.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("This student was not found in any courses");
                     }
                 }
-                else if ((CourseID == 'Q') || (CourseID == 'q')) //Quit code and write info into the files
+                else if ((CourseID == 'Q') || (CourseID == 'q')) //Quit code and write info into the relevant file names
                 {
                     quit = true;
-                    s1.FileWriter(s1, "Marks1.txt");
-                    s2.FileWriter(s2, "Marks2.txt");
-                    s3.FileWriter(s3, "Marks3.txt");
-                    s4.FileWriter(s4, "Marks4.txt");
+                    c1.FileWriter("Marks1.txt");
+                    c2.FileWriter("Marks2.txt");
+                    c3.FileWriter("Marks3.txt");
+                    c4.FileWriter("Marks4.txt");
+                    Console.WriteLine("Program successfully exited"); //Inform user of success
                 }
             }
-            Console.WriteLine("Program successfully exited");
             Console.ReadLine(); //Stop code
         }
     }
-    class Student //Defining a class to add student information
+    class Course //Defining a class to contain all info relevant to a course
     {
         public static char CourseID { get; set; } //Consistent Course ID for the file reader
         List<string> names = new List<string>(); //https://stackoverflow.com/a/22320755 has syntax for public list
@@ -129,7 +133,7 @@ namespace CSharpSchool
         List<double> assignmentWeights = new List<double>();
         List<string> phones = new List<string>(); //Some people like to put dashes in phone numbers
         List<string> emails = new List<string>();
-        public void InputProcessor(Student s) //Add marks from file into new course
+        public void InputProcessor(Course c) //Add marks from file into new course
         {
             bool quit = false;
             do
@@ -146,22 +150,22 @@ namespace CSharpSchool
                 }
                 if ((input == 'A') || (input == 'a'))
                 {
-                    s.AddAssignment();
+                    c.AddAssignment();
                 }
                 else if ((input == 'S') || (input == 's'))
                 {
-                    s.Naming(s);
+                    c.Naming(c);
                 }
                 else if ((input == 'F') || (input == 'f'))
                 {
                     Console.WriteLine("Which name to find?");
                     string name = Convert.ToString(Console.ReadLine());
                     name = name.ToUpper(); //Keeping all names in one case helps with users that use a different case
-                    s.Find(true, name);
+                    c.Find(true, name);
                 }
                 else if ((input == 'I') || (input == 'i'))
                 {
-                    s.FileReader(); //Send to method
+                    c.FileReader(); //Send to method
                 }
                 else if ((input == 'Q') || (input == 'q'))
                 {
@@ -207,14 +211,13 @@ namespace CSharpSchool
             {
                 myReader = new StreamReader("Marks4.txt");
             }
-            string line = "";
-            line = myReader.ReadLine();
+            string line = myReader.ReadLine();
             List<string> input = new List<string>(line.Split(','));
             for (int j = 0; j < input.Count; j++) //Read in assignment names
             {
                 if (input[j] != "") //Prevent addition of empty lines after commas
                 {
-                    input[j].ToUpper(); //Make input uppercase
+                    input[j] = input[j].ToUpper(); //Make input uppercase
                     for (int k = 0; k < assignmentNames.Count; k++)
                     {
                         if (assignmentNames[k] == input[j])
@@ -228,7 +231,7 @@ namespace CSharpSchool
                             }
                         }
                     }
-                    assignmentNames.Add(input[j]); //Add assignment name to array
+                    assignmentNames.Add(input[j]); //Add assignment name in upper case form to array
                 }
             }
             line = myReader.ReadLine(); //Read next line
@@ -270,7 +273,7 @@ namespace CSharpSchool
                 names.Add(input[0]); //Make input uppercase
                 birthdays.Add(Convert.ToDateTime(input[1])); //Put input into the Date-Time data type
                 phones.Add(input[2]);
-                emails.Add(input[3].ToUpper()); //Emails are not case sensitive
+                emails.Add(input[3]);
                 marks.Add(new List<short>()); //Make new row
                 for (int i = 0; i < preexistingAssignmentCount; i++)
                 {
@@ -286,37 +289,37 @@ namespace CSharpSchool
                 }
                 line = myReader.ReadLine();
             }
-            Console.WriteLine("Student(s) imported successfully.");
+            Console.WriteLine("Student(s) imported successfully."); //Comfort user by informing them of the success
             myReader.Close(); //Allow reuse by rest of operating system
         }
-        public void FileWriter(Student s, string fileName)
+        public void FileWriter(string fileName)
         {
-            StreamWriter myWriter = new StreamWriter(fileName); //Open a writer to write in marks into the file
+            StreamWriter myWriter = new StreamWriter(fileName); //Open a writer to write in marks into the file. Fhrows an unhandled exception if the file being written to is open elsewhere on the operating system
             for (int i = 0; i < assignmentNames.Count; i++) //Write course info in a beautiful visual format
             {
-                myWriter.Write(assignmentNames[i] + ", "); //Separate output with commas
+                myWriter.Write(assignmentNames[i] + ","); //Separate output with commas
             }
             myWriter.WriteLine(); //Move to next line
             for (int i = 0; i < assignmentWeights.Count; i++) //Write course info in a beautiful visual format
             {
-                myWriter.Write(assignmentWeights[i] + ", ");
+                myWriter.Write(assignmentWeights[i] + ",");
             }
             myWriter.WriteLine();
-            for (int i = 0; i < names.Count; i++) //For the amount of students present
+            for (int i = 0; i < names.Count; i++) //For the amount of students present, write to the relevant file
             {
-                myWriter.Write(names[i] + ", ");
-                myWriter.Write(birthdays[i] + ", ");
-                Console.Write(phones[i] + " ");
-                Console.Write(emails[i] + " ");
+                myWriter.Write(names[i] + ",");
+                myWriter.Write(birthdays[i] + ",");
+                myWriter.Write(phones[i] + ",");
+                myWriter.Write(emails[i] + ",");
                 for (int j = 0; j < marks[i].Count; j++) //For the amount of marks the student has
                 {
-                    myWriter.Write(marks[i][j] + ", "); //Write each mark per student in order
+                    myWriter.Write(marks[i][j] + ","); //Write each mark per student in order
                 }
                 myWriter.WriteLine(); //Space
             }
             myWriter.Close(); //Close for reuse by system
         }
-        void Naming(Student s) //Gather name and DOB for adding
+        void Naming(Course c) //Gather name and DOB for adding
         {
             Console.WriteLine("Name?");
             string name = Convert.ToString(Console.ReadLine());
@@ -329,13 +332,13 @@ namespace CSharpSchool
                 {
                     Console.WriteLine("Existing student found. You may now change their marks.");
                     match = true;
-                    s.Replace(counter);
+                    c.ReplaceStudent(counter);
                 }
                 counter++;
             }
             if (match == false) //Prevent use of this method if Replace() used
             {
-                s.AddStudent(name);
+                c.AddStudent(name);
             }
         }
         void AddAssignment() //Method to add assignments to lists
@@ -396,11 +399,11 @@ namespace CSharpSchool
                     assignmentWeights[Counter] = Convert.ToInt16(Console.ReadLine());
                     quit = true;
                 }
-                catch (FormatException)
+                catch (FormatException) //Not an int
                 {
                     Console.WriteLine("Invalid input. Please try again.");
                 }
-                catch (OverflowException)
+                catch (OverflowException) //Number too big
                 {
                     Console.WriteLine("Invalid input. Please try again.");
                 }
@@ -432,18 +435,22 @@ namespace CSharpSchool
                 }
                 catch (FormatException)
                 {
-                    Console.WriteLine("Date of birth was not in valid format and has not been added.");
+                    Console.WriteLine("Date of birth is not in valid format and has not been added.");
                 }
             }
             names.Add(Name); //Adding info to lists
             birthdays.Add(birthday);
+            Console.WriteLine("Input the student's phone number"); //Add student phone and email to lists
+            phones.Add(Console.ReadLine());
+            Console.WriteLine("Input the student's email");
+            emails.Add(Console.ReadLine());
             marks.Add(new List<short>());
             for (int i = 0; i < assignmentNames.Count; i++) //For how many assignments there are
             {
                 Console.WriteLine("Input a number to represent their mark on assignment {0} out of 100 (without the percent sign). Input anything else if the course was not taken.", assignmentNames[i]);
                 string input = Console.ReadLine();
-                Start s1 = new Start();
-                short mark = s1.MarkProcessor(input);
+                Start s = new Start();
+                short mark = s.MarkProcessor(input);
                 marks[names.Count - 1].Add(mark); //Add the mark to the most recently created name
             }
             Console.WriteLine("Student added successfully."); //Provide confirmation to user
@@ -460,7 +467,7 @@ namespace CSharpSchool
                         while (!quit) //Run loop until valid entry
                         {
                             int input = 'b';
-                            Console.WriteLine("Press D to delete their entry, R to replace their marks, V to find their average, or Q to quit to the course selection page.");
+                            Console.WriteLine("Press D to delete their entry, R to replace their marks, V to find their average, or Q to quit to the previous page.");
                             try
                             {
                                 input = Convert.ToChar(Console.ReadLine());
@@ -476,13 +483,13 @@ namespace CSharpSchool
                             }
                             else if (input == 'r' || input == 'R')
                             {
-                                Replace(counter);
+                                ReplaceStudent(counter);
                             }
                             else if (input == 'v' || input == 'V')
                             {
-                                Console.WriteLine("{0}, who is {1} years of age, has a mean of {2}%, a median of {3}%, and a mode of {4}%", names[counter], GetAge(counter), Math.Round(Mean(marks[counter]), 2), Median(marks[counter]), Mode(marks[counter]));
+                                Console.WriteLine("{0}, who is {1} years of age, has a mean of {2}%, a median of {3}%, and a mode of {4}%", names[counter], GetAge(counter), Math.Round(Mean(marks[counter], false), 2), Median(marks[counter]), Mode(marks[counter]));
                                 Console.WriteLine("In this course, the class has a mean of {0}%, and a median of {1}%", Math.Round(ClassMean(), 2), Math.Round(ClassMedian(), 2)); //Things that can be decimals need rounding off to 2 decimal places
-                                Console.WriteLine("Please note that -1% is equal to a course not taken or a course with no valid mark provided. An average of NaN% signifies that there are no valid marks on record.");
+                                Console.WriteLine("Please note that -1% is equal to a course not taken or a course with no valid mark provided.");
                                 Console.Write("Assignments: ");
                                 for (int i = 0; i < assignmentNames.Count; i++) //Output course info in a beautiful visual format
                                 {
@@ -498,19 +505,19 @@ namespace CSharpSchool
                                 Console.WriteLine("Assignment Means: ");
                                 for (int i = 0; i < assignmentNames.Count; i++) //Output course info in a beautiful visual format
                                 {
-                                    Console.Write(AssignmentMeans(i) + " ");
+                                    Console.Write(Math.Round(AssignmentMeans(i), 2) + "% "); //Round off means with non-terminating repeating decimals
                                 }
                                 Console.WriteLine();
                                 Console.WriteLine("Assignment Medians: ");
                                 for (int i = 0; i < assignmentNames.Count; i++) //Output course info in a beautiful visual format
                                 {
-                                    Console.Write(AssignmentMedians(i) + " ");
+                                    Console.Write(AssignmentMedians(i) + "% ");
                                 }
                                 Console.WriteLine();
                                 Console.WriteLine("Assignment Modes: ");
                                 for (int i = 0; i < assignmentNames.Count; i++) //Output course info in a beautiful visual format
                                 {
-                                    Console.Write(AssignmentModes(i) + " ");
+                                    Console.Write(AssignmentModes(i) + "% ");
                                 }
                                 Console.WriteLine();
                                 for (int i = 0; i < names.Count; i++) //For the amount of students present
@@ -521,7 +528,7 @@ namespace CSharpSchool
                                     Console.Write(emails[i] + " ");
                                     for (int j = 0; j < marks[i].Count; j++) //For the amount of marks the student has
                                     {
-                                        Console.Write(marks[i][j] + " "); //Output each mark per student in order
+                                        Console.Write(marks[i][j] + "% "); //Output each mark per student in order
                                     }
                                     Console.WriteLine(); //Space
                                 }
@@ -542,11 +549,15 @@ namespace CSharpSchool
             }
             return -1; //If name never found, return value to represent that
         }
-        void Replace(int Counter) //Method to allow updating of old student marks
+        void ReplaceStudent(int Counter) //Method to allow updating of old student marks
         {
+            Console.WriteLine("Reenter student's phone"); //In case phone or email changed
+            phones[Counter] = Console.ReadLine();
+            Console.WriteLine("Reenter student's email");
+            emails[Counter] = Console.ReadLine();
             for (int i = 0; i < marks[Counter].Count; i++) //For how many marks exist for that student
             {
-                Console.WriteLine("Input a mark (without the percent sign). Input anything else if the course was not taken.");
+                Console.WriteLine("Input a number to represent their mark on assignment {0} out of 100 (without the percent sign). Input anything else if the course was not taken.", assignmentNames[i]);
                 string input = Console.ReadLine();
                 short mark = MarkProcessor(input);
                 marks[Counter][i] = mark; //Replace mark at position with new mark
@@ -578,51 +589,51 @@ namespace CSharpSchool
                 Console.WriteLine("Deletion cancelled");
             }
         }
-        public double Mean(List<short> marks) //Method to calculate average
+        public double Mean(List<short> marks, bool ignoreWeights) //Method to calculate average
         {
             double totalAssignments = 0;
             double obtainedMarks = 0;
-            double averageMark;
-            try
+            if (!ignoreWeights) //For assignment means
             {
                 for (int i = 0; i < marks.Count; i++)
                 {
                     if (marks[i] != -1) //If mark is not invalid, use it in average calculation
                     {
-                        obtainedMarks += (marks[i] * assignmentWeights[i]); //Multiply assignment by weight
+                        obtainedMarks += marks[i] * assignmentWeights[i]; //Multiply assignment by weight
                         totalAssignments += assignmentWeights[i]; //Reflect assignment weighing in divisor
                     }
                 }
             }
-            catch (ArgumentOutOfRangeException) //It's possible for counter argument in for statement to be out of range when array's empty, although there would be no marks in this case to do anything with
+            else //For student means
             {
-                averageMark = -1;
-                return averageMark;
+                for (int i = 0; i < marks.Count; i++)
+                {
+                    if (marks[i] != -1) //If mark is not invalid, use it in average calculation
+                    {
+                        obtainedMarks += marks[i];
+                        totalAssignments++;
+                    }
+                }
             }
-            try
+            if (totalAssignments == 0) //If no valid assignments, return the number which indicates this
             {
-                averageMark = (double)obtainedMarks / totalAssignments; //This is the average of all courses student has taken as a decimal
+                return -1;
             }
-            catch (DivideByZeroException) //If no assignments in the course
-            {
-                averageMark = -1;
-                return averageMark;
-            }
-            return averageMark;
+            return (double)obtainedMarks / totalAssignments; //This is the average of all courses student has taken as a decimal;
         }
         double Median(List<short> marks) //Method to calculate median
         {
             List<short> sorting = new List<short>(); //Use different array to prevent editing order of marks on the first array
-            if (marks.Count == 0)
-            {
-                return -1; //Return invalid number as median doesn't exist with no assignments
-            }
             for (int i = 0; i < marks.Count; i++) //For all marks, check if they are valid
             {
                 if (marks[i] != -1) //Exclude invalid marks from further sorting
                 {
                     sorting.Add(marks[i]);
                 }
+            }
+            if (sorting.Count == 0) //If no valid marks in the sorting array
+            {
+                return -1; //Return invalid number as median doesn't exist with no assignments
             }
             sorting.Sort();
             if (sorting.Count % 2 != 0) //https://docs.microsoft.com/en-us/dotnet/api/system.decimal.op_modulus?view=net-5.0 syntax for function to return remainder of division
@@ -640,10 +651,6 @@ namespace CSharpSchool
         {
             int mostFrequent = 0;
             int maximumFrequency = 0;
-            if (marks.Count == 0)
-            {
-                return -1; //Return invalid value as mode doesn't exist with no assignments
-            }
             for (int i = 0; i <= 100; i++)
             {
                 int numberPresent = 0;
@@ -660,6 +667,10 @@ namespace CSharpSchool
                     maximumFrequency = numberPresent; //Set to amount of instances of said number
                 }
             }
+            if (maximumFrequency == 0)
+            {
+                return -1; //Would be no valid marks on record
+            }
             return mostFrequent;
         }
         double ClassMean()
@@ -668,7 +679,7 @@ namespace CSharpSchool
             double totalStudents = 0;
             for (int i = 0; i < names.Count; i++)
             {
-                double mark = Mean(marks[i]); //Send that student's marks to method for averaginf
+                double mark = Mean(marks[i], false); //Send that student's marks to method for averaging
                 if (mark != -1) //If a valid value
                 {
                     obtainedMarks += mark; //Add mark
@@ -682,7 +693,7 @@ namespace CSharpSchool
             List<double> sorting = new List<double>();
             for (int i = 0; i < names.Count; i++)
             {
-                double mark = Mean(marks[i]); //Get mean mark so median of means can be found
+                double mark = Mean(marks[i], false); //Get mean mark so median of means can be found
                 if (mark != -1) //If a valid value and thus not all "no marks"
                 {
                     sorting.Add(mark); //Add mark
@@ -711,7 +722,7 @@ namespace CSharpSchool
             {
                 assignmentMarks.Add(marks[i][assignmentID]);
             }
-            return Mean(assignmentMarks);
+            return Mean(assignmentMarks, true); //Require assignment weights to be ignored as all have same weight in this case
         }
         double AssignmentMedians(int assignmentID)
         {
