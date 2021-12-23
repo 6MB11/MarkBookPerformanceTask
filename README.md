@@ -1,4 +1,4 @@
-# MarkBookPerformanceTask
+# MarkBook Performance Task
 
 ICS4U Performance Task. Based off a small amount of scaffolding from the Programmer's Heaven C# School book by Faraz Rasheed.
 
