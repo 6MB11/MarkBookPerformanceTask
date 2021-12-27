@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic; //For lists
 using System.IO; //For reading and writing to file
+
 namespace CSharpSchool
 {
     class Start : Course //First class
@@ -12,11 +13,12 @@ namespace CSharpSchool
             Course c2 = new Course();
             Course c3 = new Course();
             Course c4 = new Course();
+            
             Console.WriteLine("---------------------------------Welcome to Buha Industries' Five Star Markbook------------------------------------"); //Put outside loop to output only once
             Console.WriteLine("This program has been developed to add students (and their marks to all existing assignments) to up to 4 courses, find students, and delete students from courses");
             Console.WriteLine("This program can also add new weighed assignments to fill with marks for all added students");
             Console.WriteLine("This program also can conduct mathematical calculations after having found a student, along with deleting them or replacing their marks");
-            Console.WriteLine("Beside the program.cs tab, you can find a set of text files to add marks and replace students and assignments with the same name for each course. Please format them as follows");
+            Console.WriteLine("In the same folder as program.cs, you can find a set of text files to add marks and replace students and assignments with the same name for each course. Please format them as follows");
             Console.WriteLine("Assignment Name 1,Assignment Name 2,...");
             Console.WriteLine("Assignment Weight 1,Assignment Weight 2,...");
             Console.WriteLine("Student Name 1,Student Birthday 1,Student Phone 1,Student Email 1,Student 1 Assignment 1 Mark,Student 1 Assignment 2 Mark...");
@@ -125,6 +127,7 @@ namespace CSharpSchool
     }
     class Course //Defining a class to contain all info relevant to a course
     {
+        string folderPath = Directory.GetCurrentDirectory();  //Get path of folder per https://www.delftstack.com/howto/csharp/how-to-get-current-folder-path-in-csharp/
         public static char CourseID { get; set; } //Consistent Course ID for the file reader
         List<string> names = new List<string>(); //https://stackoverflow.com/a/22320755 has syntax for public list
         List<DateTime> birthdays = new List<DateTime>();
@@ -197,19 +200,20 @@ namespace CSharpSchool
         }
         void FileReader() //Read in info from a file
         {
+            Console.WriteLine(Path.Combine(folderPath, "Marks1.txt"));
             int preexistingAssignmentCount = assignmentNames.Count; //Save count beforehand to avoid changes as AssignmentName list length changed
-            StreamReader myReader = new StreamReader("Marks1.txt"); //Placeholder to make other sections of method think local variable is assigned
+            StreamReader myReader = new StreamReader(Path.Combine(folderPath, "Marks1.txt")); //Placeholder to make other sections of method think local variable is assigned
             if (CourseID == '2') //If second course
             {
-                myReader = new StreamReader("Marks2.txt");
+                myReader = new StreamReader(Path.Combine(folderPath, "Marks2.txt")); //Path.Combine method from https://stackoverflow.com/a/57639075
             }
             else if (CourseID == '3')
             {
-                myReader = new StreamReader("Marks3.txt");
+                myReader = new StreamReader(Path.Combine(folderPath, "Marks3.txt"));
             }
             else if (CourseID == '4')
             {
-                myReader = new StreamReader("Marks4.txt");
+                myReader = new StreamReader(Path.Combine(folderPath, "Marks4.txt"));
             }
             string line = myReader.ReadLine();
             List<string> input = new List<string>(line.Split(','));
@@ -294,7 +298,7 @@ namespace CSharpSchool
         }
         public void FileWriter(string fileName)
         {
-            StreamWriter myWriter = new StreamWriter(fileName); //Open a writer to write in marks into the file. Fhrows an unhandled exception if the file being written to is open elsewhere on the operating system
+            StreamWriter myWriter = new StreamWriter(Path.Combine(folderPath, fileName)); //Open a writer to write in marks into the file. Fhrows an unhandled exception if the file being written to is open elsewhere on the operating system
             for (int i = 0; i < assignmentNames.Count; i++) //Write course info in a beautiful visual format
             {
                 myWriter.Write(assignmentNames[i] + ","); //Separate output with commas
